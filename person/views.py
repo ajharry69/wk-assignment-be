@@ -35,17 +35,3 @@ class PeopleView(views.APIView):
                 'message': 'invalid request data',
                 'metadata': ex.args,
             }, status=status.HTTP_400_BAD_REQUEST)
-
-# @api_view(['GET'])
-# @permission_classes((permissions.AllowAny,))
-# @renderer_classes((JPEGRenderer,))
-# def view_person_photo(request, user_id, format=None):
-#     """
-#     :param user_id: user ID who's profile image is to be retrieved
-#     :param request: HTTP request
-#     :param format: how the HTTP base_response should be returned
-#     :return: HTTP base_response in format specified by format containing JWT token
-#     """
-#     image = UserImageUrl.objects.get(user_id=user_id)
-#     serializer = UserImageUrlSerializer(instance=image)
-#     return Response(data=serializer.data.get('profile'))
