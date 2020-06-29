@@ -17,6 +17,7 @@ class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Person
         fields = ('id', 'name', 'gender', 'photo', 'photo_url', 'location',)
+        read_only_fields = ('id',)
 
     def create(self, validated_data):
         location = validated_data.pop('location') if 'location' in validated_data else None
