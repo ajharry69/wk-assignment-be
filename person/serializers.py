@@ -6,13 +6,13 @@ from . import models
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Location
-        fields = ('latitude', 'longitude', 'altitude', 'name',)
+        fields = ('latitude', 'longitude', 'altitude', 'address',)
 
 
 class PersonSerializer(serializers.ModelSerializer):
     photo_url = serializers.SerializerMethodField(read_only=True, )
-    photo = serializers.ImageField(write_only=True, )
-    location = LocationSerializer(allow_null=True, )
+    photo = serializers.ImageField(write_only=True, allow_empty_file=True, allow_null=True, default=None, )
+    location = LocationSerializer(allow_null=True, default=None, )
 
     class Meta:
         model = models.Person
@@ -28,4 +28,7 @@ class PersonSerializer(serializers.ModelSerializer):
         return person
 
     def get_photo_url(self, person):
-        return self.context.get('request').build_absolute_uri(person.photo.url)
+        try:
+            return self.context.get('request').build_absolute_uri(person.photo.url)
+        except (AttributeError, ValueError):
+            return None

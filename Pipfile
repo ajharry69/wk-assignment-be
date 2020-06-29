@@ -10,6 +10,8 @@ django = "*"
 djangorestframework = "*"
 pillow = "*"
 django-extensions = "*"
+geopy = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"

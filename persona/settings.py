@@ -19,12 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'j5vf8q+wu_e$5s@4do8qpvh2n$1xdms1&v_$x*3gdsbz^q^9*%'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'j5vf8q+wu_e$5s@4do8qpvh2n$1xdms1&v_$x*3gdsbz^q^9*%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = list(filter(lambda x: len(x) > 0, os.environ.get('ALLOWED_HOSTS', '').split(',')))
 
 # Application definition
 
@@ -74,12 +74,39 @@ WSGI_APPLICATION = 'persona.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+DB_TYPE = os.environ.get('DB_TYPE', 'sqlite')
+if DB_TYPE == 'postgre':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': os.environ.get('POSTGRE_DB_HOST'),
+            'PORT': os.environ.get('POSTGRE_DB_PORT'),
+            'NAME': os.environ.get('POSTGRE_DB_NAME'),
+            'USER': os.environ.get('POSTGRE_DB_USER'),
+            'PASSWORD': os.environ.get('POSTGRE_DB_PASSWORD'),
+        }
     }
-}
+elif DB_TYPE == 'mysql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': os.environ.get('MYSQL_DB_HOST'),
+            # 'PORT': os.environ.get('MYSQL_DB_PORT'),
+            'NAME': os.environ.get('MYSQL_DB_NAME'),
+            'USER': os.environ.get('MYSQL_DB_USER'),
+            'PASSWORD': os.environ.get('MYSQL_DB_PASSWORD'),
+            'OPTIONS': {
+                'init_command': 'SET default_storage_engine=INNODB',
+            }
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -120,3 +147,5 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', None)
