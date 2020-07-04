@@ -20,7 +20,7 @@ class Location(models.Model):
     address = models.CharField(null=True, blank=True, default=None, max_length=150, )
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        # geolocator = GoogleV3(api_key=settings.GOOGLE_MAPS_API_KEY, )
-        # location = geolocator.reverse(f'{self.latitude},{self.longitude}')
-        # self.address = location.address
+        geolocator = GoogleV3(api_key=settings.GOOGLE_MAPS_API_KEY, )
+        location = geolocator.reverse(f'{self.latitude},{self.longitude}')
+        self.address = location.address
         super().save(force_insert, force_update, using, update_fields)
