@@ -25,7 +25,7 @@ class PeopleView(views.APIView):
         photo, person = request.data.get('photo', None), request.data.get('person', None)
         person = request.data if person is None else person
         person = json.loads(person) if isinstance(person, (str, bytes)) else person
-        person['photo'] = photo  # replace photo value with photo file
+        person['photo'] = photo  # replace photo value in person(dict) with photo file
         serializer = self.serializer_class(data=person, context={"request": request}, )
         try:
             if serializer.is_valid(raise_exception=True):
